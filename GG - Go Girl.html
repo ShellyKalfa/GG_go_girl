@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>GG – GO GIRL · קהילת בנות גיימינג לישראל</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rubik:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #04050c;
+    --bg-2: #080a16;
+    --panel: rgba(14, 17, 34, 0.66);
+    --panel-solid: #0b0e1c;
+    --text: #eef0fb;
+    --muted: #9aa1c2;
+    --magenta: #ff2e9a;
+    --magenta-soft: #ff6bbd;
+    --purple: #a855f7;
+    --cyan: #22d3ee;
+    --green: #34d399;
+    --rainbow: linear-gradient(90deg,#ff2e9a,#c026d3,#6366f1,#22d3ee,#34d399,#eab308,#ff2e9a);
+    --maxw: 1240px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background:
+      radial-gradient(1200px 700px at 80% -5%, rgba(168,85,247,0.16), transparent 60%),
+      radial-gradient(900px 600px at 10% 20%, rgba(34,211,238,0.10), transparent 55%),
+      radial-gradient(1000px 800px at 50% 110%, rgba(255,46,154,0.12), transparent 60%),
+      linear-gradient(180deg, var(--bg-2), var(--bg) 40%);
+    color: var(--text);
+    font-family: 'Rubik', system-ui, sans-serif;
+    line-height: 1.6;
+    overflow-x: hidden;
+    min-height: 100vh;
+  }
+
+  /* ---------- Starfield ---------- */
+  #stars, #stars2, #stars3 {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  #stars   { background: transparent; }
+  .star {
+    position: absolute;
+    border-radius: 50%;
+    background: #fff;
+    animation: twinkle var(--dur, 4s) ease-in-out infinite;
+    opacity: var(--o, .8);
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: var(--o, .8); transform: scale(1); }
+    50% { opacity: .15; transform: scale(.6); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .star { animation: none; }
+  }
+
+  /* ---------- Rainbow neon frame ---------- */
+  .frame {
+    position: relative;
+    z-index: 2;
+    margin: 16px;
+    padding: 3px;
+    border-radius: 26px;
+    background: var(--rainbow);
+    background-size: 300% 100%;
+    animation: hue-slide 9s linear infinite;
+    box-shadow:
+      0 0 18px rgba(255,46,154,0.35),
+      0 0 50px rgba(99,102,241,0.25);
+  }
+  @keyframes hue-slide {
+    to { background-position: 300% 0; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .frame { animation: none; }
+  }
+  .frame-inner {
+    background:
+      radial-gradient(900px 500px at 85% 0%, rgba(120,40,140,0.22), transparent 60%),
+      linear-gradient(180deg, rgba(7,9,20,0.92), rgba(4,5,12,0.96));
+    border-radius: 23px;
+    overflow: hidden;
+  }
+
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 clamp(18px, 4vw, 56px); }
+
+  section { position: relative; }
+
+  /* ---------- Top nav ---------- */
+  .nav {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+  }
+  .nav-brand { display: flex; align-items: center; gap: 11px; text-decoration: none; }
+  .nav-brand img {
+    width: 42px; height: 42px; border-radius: 50%;
+    box-shadow: 0 0 14px -2px rgba(255,46,154,0.65), 0 0 6px rgba(99,102,241,0.5);
+  }
+  .nav-brand span {
+    font-family: 'Orbitron', sans-serif; font-weight: 800; font-size: 18px; letter-spacing: 1px;
+    background: linear-gradient(180deg,#fff,#9aa1c2);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    white-space: nowrap;
+  }
+  .nav-links { display: flex; gap: 4px; margin-inline-start: auto; }
+  .nav-links a {
+    color: var(--muted); text-decoration: none; font-weight: 600; font-size: 15px;
+    padding: 8px 14px; border-radius: 10px; transition: color .2s, background .2s;
+  }
+  .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.06); }
+  .nav-cta { padding: 10px 22px; font-size: 15px; }
+  @media (max-width: 760px) {
+    .nav-links { display: none; }
+    .nav-brand span { font-size: 16px; }
+    .nav { gap: 10px; }
+    .nav-cta { margin-inline-start: auto; }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    display: grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    align-items: center;
+    gap: 24px;
+    padding: clamp(40px, 6vw, 84px) 0 clamp(30px, 4vw, 48px);
+  }
+  .hero-copy { max-width: 560px; }
+
+  .logo-gg {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: clamp(72px, 12vw, 150px);
+    line-height: .82;
+    letter-spacing: 2px;
+    background: linear-gradient(180deg, #ffffff 0%, #d6dcf2 24%, #7e88b0 52%, #2a2f47 64%, #aeb6d6 80%, #ffffff 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    filter: drop-shadow(0 3px 10px rgba(0,0,0,0.6));
+    text-align: center;
+  }
+  .logo-name {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 800;
+    font-size: clamp(26px, 4.4vw, 46px);
+    letter-spacing: 3px;
+    text-align: center;
+    margin-top: 6px;
+    background: linear-gradient(180deg,#fff, #c7cdec 60%, #8b93bd);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .logo-sub {
+    text-align: center;
+    color: var(--muted);
+    font-size: clamp(15px, 2.4vw, 21px);
+    font-weight: 500;
+    margin-top: 4px;
+    letter-spacing: .5px;
+  }
+  .hero-cta-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-top: 28px;
+  }
+
+  /* ---------- Hero art (placeholder + ring) ---------- */
+  .hero-art {
+    position: relative;
+    display: grid;
+    place-items: center;
+    min-height: 380px;
+  }
+  .ring {
+    position: absolute;
+    width: min(78%, 440px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background:
+      conic-gradient(from 0deg, #ff2e9a, #a855f7, #6366f1, #22d3ee, #34d399, #ff2e9a);
+    -webkit-mask: radial-gradient(circle, transparent 60%, #000 61%, #000 66%, transparent 67%);
+            mask: radial-gradient(circle, transparent 60%, #000 61%, #000 66%, transparent 67%);
+    filter: drop-shadow(0 0 16px rgba(255,46,154,0.5)) drop-shadow(0 0 34px rgba(99,102,241,0.4));
+    animation: ringpulse 3.6s ease-in-out infinite, spin 22s linear infinite;
+    z-index: 0;
+  }
+  @keyframes ringpulse {
+    0%, 100% { opacity: .85; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.035); }
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @media (prefers-reduced-motion: reduce) {
+    .ring { animation: none; }
+  }
+
+  .ph {
+    position: relative;
+    background:
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.05) 0 10px, rgba(255,255,255,0.015) 10px 20px),
+      var(--panel-solid);
+    border: 1px dashed rgba(255,255,255,0.22);
+    display: grid;
+    place-items: center;
+    color: var(--muted);
+    font-family: ui-monospace, 'SF Mono', Menlo, monospace;
+    font-size: 12px;
+    letter-spacing: .5px;
+    text-align: center;
+    border-radius: 14px;
+  }
+  .hero-glow {
+    position: absolute;
+    width: min(88%, 470px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(255,46,154,0.35), rgba(99,102,241,0.28) 55%, transparent 72%);
+    filter: blur(34px);
+    animation: ringpulse 3.6s ease-in-out infinite;
+    z-index: 0;
+  }
+  img.hero-figure {
+    position: relative;
+    z-index: 1;
+    width: min(88%, 470px);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.06);
+    animation: ringpulse 3.6s ease-in-out infinite;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    img.hero-figure, .hero-glow { animation: none; }
+  }
+
+  /* ---------- Section headings ---------- */
+  .sec-head {
+    text-align: center;
+    margin: 0 auto clamp(24px, 4vw, 44px);
+  }
+  .eyebrow {
+    display: inline-block;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--magenta-soft);
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .sec-title {
+    font-size: clamp(28px, 5vw, 46px);
+    font-weight: 800;
+    background: linear-gradient(90deg,#fff, #ffc8e8 50%, #fff);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .sec-title.pink {
+    background: linear-gradient(90deg,#ff2e9a, #ff8fd0);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: drop-shadow(0 0 18px rgba(255,46,154,0.35));
+  }
+
+  /* ---------- About ---------- */
+  .about { padding: clamp(20px,4vw,40px) 0; }
+  .about-body {
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+    color: var(--muted);
+    font-size: clamp(16px, 2.4vw, 19px);
+  }
+  .about-body p + p { margin-top: 16px; }
+
+  /* ---------- Feature cards ---------- */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    padding: clamp(24px,4vw,40px) 0;
+  }
+  .card {
+    position: relative;
+    padding: 22px 18px 24px;
+    border-radius: 18px;
+    background: var(--panel);
+    border: 1.5px solid var(--c, var(--magenta));
+    box-shadow: 0 0 0 1px rgba(255,255,255,0.02), 0 0 22px -6px var(--c, var(--magenta));
+    backdrop-filter: blur(6px);
+    transition: transform .35s cubic-bezier(.2,.7,.2,1), box-shadow .35s, opacity .6s, translate .6s;
+    text-align: center;
+  }
+  .card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 12px 36px -10px var(--c), 0 0 30px -4px var(--c);
+  }
+  .card-icon {
+    width: 64px; height: 64px;
+    margin: 0 auto 14px;
+    border-radius: 14px;
+    display: grid; place-items: center;
+    background: radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--c) 38%, transparent), transparent 70%), rgba(255,255,255,0.03);
+    border: 1px solid color-mix(in srgb, var(--c) 55%, transparent);
+    font-size: 28px;
+  }
+  .card h3 {
+    font-size: 18px; font-weight: 700; margin-bottom: 8px;
+    color: var(--c-text, #fff);
+  }
+  .card p { font-size: 14.5px; color: var(--muted); line-height: 1.55; }
+
+  /* ---------- Stats ---------- */
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    padding: clamp(28px,4vw,46px) 0;
+    text-align: center;
+  }
+  .stat .num {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 800;
+    font-size: clamp(40px, 6.5vw, 74px);
+    line-height: 1;
+    background: linear-gradient(180deg,#ff2e9a, #c026d3);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+    filter: drop-shadow(0 0 16px rgba(255,46,154,0.45));
+  }
+  .stat .num::after { content: "+"; }
+  .stat .label {
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: clamp(14px, 2vw, 17px);
+    font-weight: 500;
+  }
+
+  /* ---------- Games ---------- */
+  .games {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    padding: clamp(20px,4vw,36px) 0;
+  }
+  .game {
+    border-radius: 16px;
+    overflow: hidden;
+    background: var(--panel-solid);
+    border: 1px solid rgba(255,255,255,0.08);
+    transition: transform .35s cubic-bezier(.2,.7,.2,1), border-color .35s, box-shadow .35s, opacity .6s, translate .6s;
+  }
+  .game:hover {
+    transform: translateY(-6px) scale(1.015);
+    border-color: var(--magenta);
+    box-shadow: 0 16px 40px -14px rgba(255,46,154,0.6);
+  }
+  .game .thumb {
+    aspect-ratio: 16 / 11;
+    border: none;
+    border-radius: 0;
+  }
+  .game .cap {
+    padding: 12px 14px;
+    font-size: 14.5px;
+    font-weight: 600;
+    text-align: center;
+    color: #e9ebfb;
+  }
+
+  /* ---------- CTA ---------- */
+  .cta {
+    margin: clamp(30px,5vw,60px) 0 clamp(20px,3vw,34px);
+    padding: clamp(34px,5vw,60px) clamp(20px,4vw,48px);
+    border-radius: 22px;
+    text-align: center;
+    background:
+      radial-gradient(600px 300px at 50% 0%, rgba(255,46,154,0.18), transparent 70%),
+      linear-gradient(180deg, rgba(168,85,247,0.10), rgba(34,211,238,0.06));
+    border: 1px solid rgba(255,255,255,0.10);
+  }
+  .cta h2 {
+    font-size: clamp(26px, 4.6vw, 42px);
+    font-weight: 800;
+    margin-bottom: 12px;
+    background: linear-gradient(90deg,#fff,#ffc8e8);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .cta p { color: var(--muted); max-width: 540px; margin: 0 auto 24px; font-size: clamp(15px,2.3vw,18px); }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    padding: 14px 30px;
+    border-radius: 999px;
+    font-weight: 700;
+    font-size: 17px;
+    font-family: 'Rubik', sans-serif;
+    text-decoration: none;
+    cursor: pointer;
+    border: none;
+    transition: transform .2s, box-shadow .3s, filter .3s;
+  }
+  .btn-primary {
+    color: #fff;
+    background: linear-gradient(90deg,#ff2e9a, #c026d3);
+    box-shadow: 0 8px 26px -8px rgba(255,46,154,0.8), inset 0 0 0 1px rgba(255,255,255,0.15);
+  }
+  .btn-primary:hover { transform: translateY(-2px) scale(1.03); filter: brightness(1.08); box-shadow: 0 12px 34px -8px rgba(255,46,154,0.95); }
+  .btn-ghost {
+    color: #fff;
+    background: rgba(255,255,255,0.04);
+    border: 1.5px solid rgba(255,255,255,0.22);
+  }
+  .btn-ghost:hover { transform: translateY(-2px); border-color: var(--magenta); box-shadow: 0 0 20px -4px rgba(255,46,154,0.6); }
+
+  /* ---------- Footer ---------- */
+  footer {
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: clamp(28px,4vw,44px) 0 clamp(34px,4vw,48px);
+    text-align: center;
+  }
+  .foot-logo {
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 30px;
+    letter-spacing: 2px;
+    background: linear-gradient(180deg,#fff,#9aa1c2);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .socials { display: flex; gap: 12px; justify-content: center; margin: 18px 0 14px; }
+  .soc {
+    width: 44px; height: 44px;
+    display: grid; place-items: center;
+    border-radius: 12px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.10);
+    color: var(--muted);
+    transition: transform .25s, color .25s, border-color .25s, box-shadow .25s;
+  }
+  .soc:hover { transform: translateY(-3px); color: #fff; border-color: var(--magenta); box-shadow: 0 0 18px -4px rgba(255,46,154,0.7); }
+  .soc svg { width: 20px; height: 20px; }
+  .foot-note { color: var(--muted); font-size: 13.5px; margin-top: 8px; }
+
+  /* ---------- Scroll reveal ---------- */
+  .reveal { opacity: 0; translate: 0 26px; }
+  .reveal.in { opacity: 1; translate: 0 0; }
+  .features .card.reveal { transition-delay: var(--d, 0s); }
+  @media (prefers-reduced-motion: reduce) {
+    .reveal { opacity: 1; translate: 0 0; }
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 900px) {
+    .features, .games { grid-template-columns: repeat(2, 1fr); }
+    .stats { grid-template-columns: repeat(2, 1fr); gap: 26px 18px; }
+  }
+  @media (max-width: 760px) {
+    .frame { margin: 10px; border-radius: 20px; }
+    .frame-inner { border-radius: 17px; }
+    .hero {
+      grid-template-columns: 1fr;
+      text-align: center;
+      padding-top: 36px;
+    }
+    .hero-copy { margin: 0 auto; order: 2; }
+    .hero-art { order: 1; min-height: 320px; }
+    .hero-figure { width: min(64%, 280px); }
+  }
+  @media (max-width: 460px) {
+    .features { grid-template-columns: 1fr; }
+    .games { grid-template-columns: 1fr 1fr; }
+    .logo-gg { font-size: clamp(64px, 22vw, 110px); }
+  }
+</style>
+</head>
+<body>
+
+<div id="stars"></div>
+
+<div class="frame">
+ <div class="frame-inner">
+  <div class="wrap">
+
+    <!-- ===================== NAV ===================== -->
+    <nav class="nav">
+      <a class="nav-brand" href="#">
+        <img src="assets/gg-hero.png" alt="GG – Go Girl" />
+        <span>GG · GO GIRL</span>
+      </a>
+      <div class="nav-links">
+        <a href="#about">אודות</a>
+        <a href="#stats">מספרים</a>
+        <a href="#games">משחקים</a>
+        <a href="#join">הצטרפו</a>
+      </div>
+      <a href="#join" class="btn btn-primary nav-cta">הצטרפו</a>
+    </nav>
+
+    <section class="hero" data-screen-label="Hero">
+      <div class="hero-copy">
+        <div class="logo-gg">GG</div>
+        <div class="logo-name">GG – GO GIRL</div>
+        <div class="logo-sub">קהילת בנות גיימינג לישראל</div>
+        <div class="hero-cta-row">
+          <a href="#join" class="btn btn-primary">הצטרפו לקהילה</a>
+          <a href="#about" class="btn btn-ghost">קראו עוד</a>
+        </div>
+      </div>
+      <div class="hero-art">
+        <div class="hero-glow"></div>
+        <img class="hero-figure" src="assets/gg-hero.png" alt="GG – Go Girl דמות הירו" />
+      </div>
+    </section>
+
+    <!-- ===================== ABOUT ===================== -->
+    <section class="about" id="about" data-screen-label="About">
+      <div class="sec-head reveal">
+        <span class="eyebrow">ABOUT</span>
+        <h2 class="sec-title">הכירו את GG – GO GIRL</h2>
+      </div>
+      <div class="about-body reveal">
+        <p>קהילת בנות גיימינג עבור הדור הבא — כרטיס כניסה לעולם הגיימינג. אנחנו רוצות לתת לבנות ישראל להיות המובילות בתחום הגיימינג.</p>
+        <p>אנו יוצרות קהילה של נשים לנשים ולקהל הרחב, ובניית משחקים שכולן יכולות לשחק ולהנות מהם.</p>
+      </div>
+    </section>
+
+    <!-- ===================== FEATURES ===================== -->
+    <section data-screen-label="Features">
+      <div class="features">
+        <div class="card reveal" style="--c:#ff2e9a; --d:0s;">
+          <div class="card-icon">🎮</div>
+          <h3>בניית משחקים</h3>
+          <p>סטודנטיות מתחברות בקהילה שלנו וכותבות משחקים שכולן יכולות לשחק ולהנות מהם!</p>
+        </div>
+        <div class="card reveal" style="--c:#a855f7; --d:.08s;">
+          <div class="card-icon">🌐</div>
+          <h3>בניית קהילה</h3>
+          <p>אנחנו יוצרות קהילה של נשים בתחום, לתמיכה, לימוד וייעוץ הדדי.</p>
+        </div>
+        <div class="card reveal" style="--c:#22d3ee; --d:.16s;">
+          <div class="card-icon">🎤</div>
+          <h3>כנסים שנתיים</h3>
+          <p>אירועים גדולים ואירוח של מומחיות ואושיות, סדנאות ופאנלים.</p>
+        </div>
+        <div class="card reveal" style="--c:#34d399; --d:.24s;">
+          <div class="card-icon">📅</div>
+          <h3>אירועי חברה</h3>
+          <p>מפגשים, סדנאות ואירועים חברתיים סדירים, גם כדי לחזק את הקהילה הגדולה!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== STATS ===================== -->
+    <section data-screen-label="Stats">
+      <div class="sec-head reveal">
+        <span class="eyebrow">BY THE NUMBERS</span>
+        <h2 class="sec-title pink">קהילה במספרים</h2>
+      </div>
+      <div class="stats" id="stats">
+        <div class="stat reveal"><div class="num" data-to="1000">0</div><div class="label">חברי וחברות קהילה</div></div>
+        <div class="stat reveal"><div class="num" data-to="100">0</div><div class="label">סטודנטיות לבניית משחקים</div></div>
+        <div class="stat reveal"><div class="num" data-to="20">0</div><div class="label">מנטוריות מהתעשייה</div></div>
+        <div class="stat reveal"><div class="num" data-to="5">0</div><div class="label">אירועי חברה שנתיים</div></div>
+      </div>
+    </section>
+
+    <!-- ===================== GAMES ===================== -->
+    <section id="games" data-screen-label="Games">
+      <div class="sec-head reveal">
+        <span class="eyebrow">PLAY</span>
+        <h2 class="sec-title">המשחקים שלנו</h2>
+      </div>
+      <div class="games">
+        <div class="game reveal"><div class="ph thumb">game art</div><div class="cap">Project: Girl Power</div></div>
+        <div class="game reveal"><div class="ph thumb">game art</div><div class="cap">Pixel Queen Adventures</div></div>
+        <div class="game reveal"><div class="ph thumb">game art</div><div class="cap">Pixel Queen Peaks</div></div>
+        <div class="game reveal"><div class="ph thumb">game art</div><div class="cap">Neon Drift Squad</div></div>
+      </div>
+    </section>
+
+    <!-- ===================== CTA ===================== -->
+    <section id="join" data-screen-label="Join">
+      <div class="cta reveal">
+        <h2>מוכנות להצטרף?</h2>
+        <p>בואי להיות חלק מקהילת בנות הגיימינג הגדולה בישראל — נשמח לראות אותך.</p>
+        <div class="hero-cta-row" style="margin-top:0;">
+          <a href="#" class="btn btn-primary">הצטרפו עכשיו</a>
+          <a href="#" class="btn btn-ghost">דברו איתנו</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer data-screen-label="Footer">
+      <div class="foot-logo">GG · GO GIRL</div>
+      <div class="socials">
+        <a class="soc" href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor" stroke="none"/></svg></a>
+        <a class="soc" href="#" aria-label="Discord"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M20 5.3A18 18 0 0 0 15.5 4l-.2.4a14 14 0 0 1 3.7 1.9 13 13 0 0 0-11 0A14 14 0 0 1 11.7 4.4L11.5 4A18 18 0 0 0 7 5.3C3.7 10.2 2.8 15 3.2 19.6A18 18 0 0 0 8.6 22l.6-1.5a11 11 0 0 1-1.8-.9l.4-.3a13 13 0 0 0 11.2 0l.4.3a11 11 0 0 1-1.8.9l.6 1.5a18 18 0 0 0 5.4-2.4c.5-5.3-.8-10-3.6-14.3ZM9.7 16.5c-1 0-1.9-1-1.9-2.2s.8-2.2 1.9-2.2 1.9 1 1.9 2.2-.8 2.2-1.9 2.2Zm4.6 0c-1 0-1.9-1-1.9-2.2s.8-2.2 1.9-2.2 1.9 1 1.9 2.2-.9 2.2-1.9 2.2Z"/></svg></a>
+        <a class="soc" href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3c.3 2.2 1.6 3.7 3.7 3.9v2.6c-1.3.1-2.5-.3-3.7-1v5.9c0 4.2-3.6 6.9-7.3 5.5A5.6 5.6 0 0 1 6 8.8c.6-.1 1.2-.1 1.9 0v2.7a3 3 0 0 0-1.5.2 2.9 2.9 0 0 0 1 5.6c1.6 0 2.7-1.2 2.7-2.9V3h2.4Z"/></svg></a>
+        <a class="soc" href="#" aria-label="WhatsApp"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm5.3 14c-.2.6-1.3 1.2-1.8 1.2s-1.5.2-3.7-.9-3.7-3.6-3.8-3.8-1-1.3-1-2.5.6-1.8.9-2c.2-.3.5-.3.7-.3h.5c.2 0 .4 0 .6.5l.8 1.9c.1.2.1.4 0 .5l-.4.6c-.2.2-.3.4-.1.7s.7 1.2 1.5 1.9c1 .9 1.8 1.1 2 1.2s.4.1.6-.1l.8-.9c.2-.2.4-.2.6-.1l1.8.9c.2.1.4.2.4.3.1.2.1.7-.1 1.3Z"/></svg></a>
+      </div>
+      <div class="foot-note">© 2026 GG – GO GIRL · קהילת בנות גיימינג לישראל</div>
+    </footer>
+
+  </div>
+ </div>
+</div>
+
+<script>
+  /* ---------- Starfield ---------- */
+  (function () {
+    const layer = document.getElementById('stars');
+    const N = window.innerWidth < 600 ? 60 : 120;
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < N; i++) {
+      const s = document.createElement('div');
+      s.className = 'star';
+      const size = Math.random() * 2 + 0.6;
+      s.style.width = s.style.height = size + 'px';
+      s.style.left = Math.random() * 100 + '%';
+      s.style.top = Math.random() * 100 + '%';
+      s.style.setProperty('--o', (Math.random() * 0.6 + 0.3).toFixed(2));
+      s.style.setProperty('--dur', (Math.random() * 4 + 2.5).toFixed(1) + 's');
+      s.style.animationDelay = (Math.random() * 5).toFixed(1) + 's';
+      frag.appendChild(s);
+    }
+    layer.appendChild(frag);
+  })();
+
+  /* ---------- Scroll reveal ---------- */
+  const revIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) { e.target.classList.add('in'); revIO.unobserve(e.target); }
+    });
+  }, { threshold: 0.18 });
+  document.querySelectorAll('.reveal').forEach((el) => revIO.observe(el));
+
+  /* ---------- Count-up on scroll ---------- */
+  function animateCount(el) {
+    const target = +el.dataset.to;
+    const dur = 1600;
+    const start = performance.now();
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce) { el.textContent = target; return; }
+    function tick(now) {
+      const p = Math.min((now - start) / dur, 1);
+      const eased = 1 - Math.pow(1 - p, 3);
+      el.textContent = Math.round(target * eased);
+      if (p < 1) requestAnimationFrame(tick);
+      else el.textContent = target;
+    }
+    requestAnimationFrame(tick);
+  }
+  const numIO = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      if (e.isIntersecting) { animateCount(e.target); numIO.unobserve(e.target); }
+    });
+  }, { threshold: 0.6 });
+  document.querySelectorAll('.num').forEach((el) => numIO.observe(el));
+</script>
+</body>
+</html>
