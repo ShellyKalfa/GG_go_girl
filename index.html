@@ -122,11 +122,37 @@
   }
   .nav-links a:hover { color: #fff; background: rgba(255,255,255,0.06); }
   .nav-cta { padding: 10px 22px; font-size: 15px; }
+  .nav-toggle {
+    display: none;
+    align-items: center; justify-content: center;
+    width: 42px; height: 42px; flex: none;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.14);
+    color: #fff; cursor: pointer;
+  }
+  .nav-toggle svg { width: 22px; height: 22px; }
   @media (max-width: 760px) {
-    .nav-links { display: none; }
+    .nav { gap: 10px; position: relative; }
     .nav-brand span { font-size: 16px; }
-    .nav { gap: 10px; }
-    .nav-cta { margin-inline-start: auto; }
+    .nav-toggle { display: inline-flex; margin-inline-start: auto; }
+    .nav-links {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      inset-inline: 0;
+      flex-direction: column;
+      gap: 2px;
+      margin: 0;
+      background: var(--panel-solid);
+      border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 14px;
+      padding: 10px;
+      box-shadow: 0 18px 44px -12px rgba(0,0,0,0.65);
+      z-index: 60;
+    }
+    .nav-links.open { display: flex; }
+    .nav-links a { padding: 12px 14px; font-size: 16px; }
   }
 
   /* ---------- Hero ---------- */
@@ -499,12 +525,15 @@
         <img src="assets/gg-hero.png" alt="GG – Go Girl" />
         <span>GG · GO GIRL</span>
       </a>
-      <div class="nav-links">
+      <div class="nav-links" id="navLinks" onclick="this.classList.remove('open')">
         <a href="#about">אודות</a>
         <a href="#stats">מספרים</a>
         <a href="games.html">משחקים</a>
         <a href="#join">הצטרפו</a>
       </div>
+      <button class="nav-toggle" aria-label="תפריט" aria-expanded="false" aria-controls="navLinks" onclick="this.setAttribute('aria-expanded', document.getElementById('navLinks').classList.toggle('open'))">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+      </button>
       <a href="https://chat.whatsapp.com/CkjWl3tvWeD5S9Rlbjgulk" target="_blank" rel="noopener" class="btn btn-primary nav-cta">הצטרפו</a>
     </nav>
 
