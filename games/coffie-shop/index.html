@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>GG – GO GIRL · Coffee Shop</title>
     <link rel="shortcut icon" href="TemplateData/favicon.ico">
     <link rel="stylesheet" href="TemplateData/style.css">
@@ -11,11 +11,47 @@
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rubik:wght@500;700&display=swap" rel="stylesheet" />
     <script src="TemplateData/profiler.js"></script>
     <style>
+      html, body { height: 100%; }
       body {
         background: #04050c;
         margin: 0;
         font-family: 'Rubik', sans-serif;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
       }
+      /* Responsive game area: fill the space under the header and scale the
+         canvas to the largest 8:5 (960x600) box that fits — desktop & phones. */
+      #unity-container,
+      #unity-container.unity-desktop {
+        position: relative;
+        left: auto;
+        top: auto;
+        transform: none;
+        flex: 1 1 auto;
+        min-height: 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+      #unity-canvas {
+        display: block;
+        max-width: 100%;
+        max-height: 100%;
+      }
+      /* Keep only the fullscreen button as a small overlay; drop Unity dev chrome. */
+      #unity-footer {
+        position: absolute;
+        right: 10px;
+        bottom: 8px;
+        margin: 0;
+        z-index: 5;
+      }
+      #unity-logo-title-footer,
+      #unity-build-title { display: none; }
+      #unity-fullscreen-button { float: none; }
       .gg-header {
         display: flex;
         align-items: center;
@@ -61,6 +97,12 @@
         direction: rtl;
       }
       .gg-back-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+      @media (max-width: 600px) {
+        .gg-header { padding: 8px 14px; }
+        .gg-header-title { display: none; }
+        .gg-header-brand { font-size: 17px; letter-spacing: 1px; }
+        .gg-back-btn { padding: 7px 14px; font-size: 13px; }
+      }
     </style>
   </head>
   <body>
@@ -148,26 +190,27 @@
       // JS_FileSystem_Sync() behavior, but in future Unity version, this will be
       // expected to change.
 
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Mobile device style: fill the whole browser client area with the game canvas:
-
-        var meta = document.createElement('meta');
-        meta.name = 'viewport';
-        meta.content = 'width=device-width, height=device-height, initial-scale=1.0, user-scalable=no, shrink-to-fit=yes';
-        document.getElementsByTagName('head')[0].appendChild(meta);
-        document.querySelector("#unity-container").className = "unity-mobile";
-        canvas.className = "unity-mobile";
-
-        // To lower canvas resolution on mobile devices to gain some
-        // performance, uncomment the following line:
-        // config.devicePixelRatio = 1;
-
-
-      } else {
-        // Desktop style: Render the game canvas in a window that can be maximized to fullscreen:
-        canvas.style.width = "960px";
-        canvas.style.height = "600px";
+      // Responsive sizing: scale the canvas to the largest 8:5 (960x600) box that
+      // fits the area below the GG header, on both desktop and phones.
+      var GG_ASPECT = 960 / 600;
+      function ggResizeGame() {
+        var container = document.querySelector("#unity-container");
+        if (!container || !canvas) return;
+        var availW = container.clientWidth;
+        var availH = container.clientHeight;
+        var w = availW;
+        var h = w / GG_ASPECT;
+        if (h > availH) {
+          h = availH;
+          w = h * GG_ASPECT;
+        }
+        canvas.style.width = Math.floor(w) + "px";
+        canvas.style.height = Math.floor(h) + "px";
       }
+      window.addEventListener("resize", ggResizeGame);
+      window.addEventListener("orientationchange", ggResizeGame);
+      window.addEventListener("load", ggResizeGame);
+      ggResizeGame();
 
       document.querySelector("#unity-loading-bar").style.display = "block";
 
