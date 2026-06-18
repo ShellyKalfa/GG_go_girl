@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <!-- ✏️ CHANGE 1: Game title shown in browser tab -->
+    <title>GG – GO GIRL · GAME NAME HERE</title>
+
+    <link rel="shortcut icon" href="TemplateData/favicon.ico">
+    <link rel="stylesheet" href="TemplateData/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rubik:wght@500;700&display=swap" rel="stylesheet" />
+    <script src="TemplateData/profiler.js"></script>
+    <style>
+      html, body { height: 100%; }
+      body {
+        background: #04050c;
+        margin: 0;
+        font-family: 'Rubik', sans-serif;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+      }
+      #unity-container,
+      #unity-container.unity-desktop {
+        position: relative;
+        left: auto;
+        top: auto;
+        transform: none;
+        flex: 1 1 auto;
+        min-height: 0;
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+      #unity-canvas {
+        display: block;
+        max-width: 100%;
+        max-height: 100%;
+      }
+      #unity-footer {
+        position: absolute;
+        right: 10px;
+        bottom: 8px;
+        margin: 0;
+        z-index: 5;
+      }
+      #unity-logo-title-footer,
+      #unity-build-title { display: none; }
+      #unity-fullscreen-button { float: none; }
+      .gg-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 12px 28px;
+        background: linear-gradient(90deg, rgba(4,5,12,0.98), rgba(10,8,20,0.98));
+        border-bottom: 2px solid #ff2e9a;
+        box-shadow: 0 0 24px -4px rgba(255,46,154,0.4);
+      }
+      .gg-header-brand {
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 900;
+        font-size: 22px;
+        letter-spacing: 2px;
+        background: linear-gradient(90deg, #ff2e9a, #a855f7, #22d3ee);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+        text-decoration: none;
+      }
+      .gg-header-title {
+        font-family: 'Orbitron', sans-serif;
+        font-weight: 700;
+        font-size: 16px;
+        color: #fff;
+        letter-spacing: 1px;
+        opacity: 0.85;
+      }
+      .gg-back-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 20px;
+        border-radius: 999px;
+        background: linear-gradient(90deg, #ff2e9a, #c026d3);
+        color: #fff;
+        font-family: 'Rubik', sans-serif;
+        font-weight: 700;
+        font-size: 14px;
+        text-decoration: none;
+        box-shadow: 0 4px 16px -4px rgba(255,46,154,0.7);
+        transition: transform .2s, filter .2s;
+        direction: rtl;
+      }
+      .gg-back-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
+      @media (max-width: 600px) {
+        .gg-header { padding: 8px 14px; }
+        .gg-header-title { display: none; }
+        .gg-header-brand { font-size: 17px; letter-spacing: 1px; }
+        .gg-back-btn { padding: 7px 14px; font-size: 13px; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="gg-header">
+      <a class="gg-back-btn" href="../../index.html">&#8594; חזרה לאתר</a>
+
+      <!-- ✏️ CHANGE 2: Game name shown in the header bar -->
+      <div class="gg-header-title">GAME NAME HERE</div>
+
+      <a class="gg-header-brand" href="../../index.html">GG · GO GIRL</a>
+    </header>
+
+    <div id="unity-container" class="unity-desktop">
+      <canvas id="unity-canvas" width=960 height=600 tabindex="-1"></canvas>
+      <div id="unity-loading-bar">
+        <div id="unity-logo"></div>
+        <div id="unity-progress-bar-empty">
+          <div id="unity-progress-bar-full"></div>
+        </div>
+      </div>
+      <div id="unity-warning"> </div>
+      <div id="unity-footer">
+        <div id="unity-logo-title-footer"></div>
+        <div id="unity-fullscreen-button"></div>
+        <div id="unity-build-title">demo</div>
+      </div>
+    </div>
+
+    <script>
+      var canvas = document.querySelector("#unity-canvas");
+
+      function unityShowBanner(msg, type) {
+        var warningBanner = document.querySelector("#unity-warning");
+        function updateBannerVisibility() {
+          warningBanner.style.display = warningBanner.children.length ? 'block' : 'none';
+        }
+        var div = document.createElement('div');
+        div.innerHTML = msg;
+        warningBanner.appendChild(div);
+        if (type == 'error') div.style = 'background: red; padding: 10px;';
+        else {
+          if (type == 'warning') div.style = 'background: yellow; padding: 10px;';
+          setTimeout(function() {
+            warningBanner.removeChild(div);
+            updateBannerVisibility();
+          }, 5000);
+        }
+        updateBannerVisibility();
+      }
+
+      var buildUrl = "Build";
+
+      // ✏️ CHANGE 3: Replace MY-GAME-NAME with the exact filename Unity exported
+      // Example: if Unity made "my-game.loader.js" → write "my-game" below
+      var GAME_FILE = "MY-GAME-NAME";
+
+      var loaderUrl = buildUrl + "/" + GAME_FILE + ".loader.js";
+      var config = {
+        arguments: [],
+        dataUrl:      buildUrl + "/" + GAME_FILE + ".data",
+        frameworkUrl: buildUrl + "/" + GAME_FILE + ".framework.js",
+        codeUrl:      buildUrl + "/" + GAME_FILE + ".wasm",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "DefaultCompany",
+        productName: "demo",
+        productVersion: "1.0",
+        showBanner: unityShowBanner,
+      };
+
+      // Responsive: scale canvas to largest 8:5 (960×600) box that fits
+      var GG_ASPECT = 960 / 600;
+      function ggResizeGame() {
+        var container = document.querySelector("#unity-container");
+        if (!container || !canvas) return;
+        var availW = container.clientWidth;
+        var availH = container.clientHeight;
+        var w = availW;
+        var h = w / GG_ASPECT;
+        if (h > availH) { h = availH; w = h * GG_ASPECT; }
+        canvas.style.width  = Math.floor(w) + "px";
+        canvas.style.height = Math.floor(h) + "px";
+      }
+      window.addEventListener("resize", ggResizeGame);
+      window.addEventListener("orientationchange", ggResizeGame);
+      window.addEventListener("load", ggResizeGame);
+      ggResizeGame();
+
+      document.querySelector("#unity-loading-bar").style.display = "block";
+
+      var script = document.createElement("script");
+      script.src = loaderUrl;
+      script.onload = () => {
+        createUnityInstance(canvas, config, (progress) => {
+          document.querySelector("#unity-progress-bar-full").style.width = 100 * progress + "%";
+        }).then((unityInstance) => {
+          document.querySelector("#unity-loading-bar").style.display = "none";
+          document.querySelector("#unity-fullscreen-button").onclick = () => {
+            unityInstance.SetFullscreen(1);
+          };
+          var profile = unityProfiler.createButton(unityInstance);
+          profile.style.marginLeft = '5px';
+          document.querySelector("#unity-build-title").appendChild(profile);
+
+          var quit = document.createElement("button");
+          quit.style = "margin-left: 5px; background-color: lightgray; border: none; padding: 5px; cursor: pointer";
+          quit.innerHTML = "Unload";
+          document.querySelector("#unity-build-title").appendChild(quit);
+          quit.onclick = () => {
+            unityInstance.Quit().then(() => {
+              unityProfiler.shutDown();
+              document.querySelector("#unity-container").remove();
+              canvas = null;
+              script.remove();
+              script = null;
+            });
+          };
+        }).catch((message) => { alert(message); });
+      };
+
+      document.body.appendChild(script);
+    </script>
+  </body>
+</html>
